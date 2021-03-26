@@ -19,7 +19,7 @@ Get a list of managed hostnames:
 To add or modify hostname's IP (without domain name you configured) - IP
 is taken from the source of the request:
 
-    curl -X PUT http://127.0.0.1:5000/manage/my_cool_host
+    curl -X PUT http://127.0.0.1:5000/manage/my-cool-host.usersys.example.com
 
 For every managed host, you should be able to see one file in `hosts_dir/`
 directory. Intention is that dnsmasq would be loading hosts from that
