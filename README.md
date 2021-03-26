@@ -51,7 +51,7 @@ To build the image:
 
 And to run it:
 
-    podman run --rm -ti -p 5000:5000 -v $( pwd )/hosts_dir/:/usr/src/app/hosts_dir tiny-ddns-manager
+    podman run --rm -ti -p 5000:5000 -v $( pwd )/hosts_dir/:/usr/src/app/hosts_dir:Z tiny-ddns-manager
 
 
 Testing
