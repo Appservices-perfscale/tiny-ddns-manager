@@ -14,6 +14,7 @@ if ! [ -d venv ]; then
 fi
 
 source venv/bin/activate
+export HOSTS_DIR=hosts_dir
 export FLASK_APP=tdm.py
 flask run &>/tmp/tdm.log &
 pid=$!

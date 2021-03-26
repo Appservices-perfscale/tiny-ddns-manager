@@ -8,6 +8,7 @@ deployment.
 We use it just to give us handy way how to create hostnames for temporary
 virtual machines and such. We use DNSMasq as an actual DNS server.
 
+
 Usage
 -----
 
@@ -19,6 +20,10 @@ To add or modify hostname's IP (without domain name you configured) - IP
 is taken from the source of the request:
 
     curl -X PUT http://127.0.0.1:5000/manage/my_cool_host
+
+For every managed host, you should be able to see one file in `hosts_dir/`
+directory. Intention is that dnsmasq would be loading hosts from that
+directory, so this way you can manage hosts returned by that DNS server.
 
 
 Developing
@@ -32,10 +37,22 @@ This will get you the server running on `http://127.0.0.1:5000/`:
     export FLASK_APP=tdm.py
     flask run
 
+
 Build image
 -----------
 
+Image should be available form quay.io repo:
+
+    podman pull quay.io/rhcloudperfscale/tiny-ddns-manager
+
+To build the image:
+
     sudo podman build -t tiny-ddns-manager .
+
+And to run it:
+
+    podman run --rm -ti -p 5000:5000 -v $( pwd )/hosts_dir/:/usr/src/app/hosts_dir tiny-ddns-manager
+
 
 Testing
 -------

@@ -21,4 +21,4 @@ COPY . /usr/src/app
 
 USER 1001
 
-CMD tdm.sh
+CMD ./tdm.sh
