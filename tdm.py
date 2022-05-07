@@ -119,7 +119,6 @@ def manage(hostname):
             "message": message,
         }
     except Exception as e:
-        raise
         return {
             "result": "failed",
             "message": str(e),
