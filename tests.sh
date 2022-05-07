@@ -15,20 +15,27 @@ fi
 
 source venv/bin/activate
 export HOSTS_DIR=hosts_dir
+export ALLOWED_DOMAIN=example.com
 export FLASK_APP=tdm.py
 flask run &>/tmp/tdm.log &
 pid=$!
 trap "kill $pid" EXIT
 sleep 1
 
+# Pre-created host exists
 curl -X GET http://127.0.0.1:5000/ | grep 'xyz\.example\.com.*1\.2\.3\.4'
+
+# We can create host and it will appear in file and in API
 curl -X GET http://127.0.0.1:5000/ | grep -v 'another-host\.example\.com'
-
 curl -X PUT http://127.0.0.1:5000/manage/another-host.example.com | grep 'result.*success'
-
 grep '127\.0\.0\.1 another-host\.example\.com' hosts_dir/another-host_example_com
-
-curl -X GET http://127.0.0.1:5000/ | grep 'xyz\.example\.com.*1\.2\.3\.4'
 curl -X GET http://127.0.0.1:5000/ | grep 'another-host\.example\.com.*127\.0\.0\.1'
+
+# Pre-created host still exists
+curl -X GET http://127.0.0.1:5000/ | grep 'xyz\.example\.com.*1\.2\.3\.4'
+
+# Ensure we can not create in different than allowed domain
+curl -X PUT http://127.0.0.1:5000/manage/unknown-host.another.net | grep 'result.*failed'
+curl -X GET http://127.0.0.1:5000/ | grep -v 'unknown-host\.another\.net'
 
 echo "SUCCESS"

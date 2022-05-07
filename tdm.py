@@ -11,6 +11,7 @@ import flask
 app = flask.Flask(__name__)
 
 HOSTS_DIR = os.environ.get('HOSTS_DIR', 'hosts_dir/')
+ALLOWED_DOMAIN = os.environ.get('ALLOWED_DOMAIN', 'example.com')
 
 
 def _validate_ip(data):
@@ -42,6 +43,9 @@ def _validate_hostname(data):
     #  - doesn't begin or end with a hyphen
     allowed = re.compile("(?!-)[a-z0-9-]{1,63}(?<!-)$")
     assert all(allowed.match(x) for x in data.split(".")), "Hostname segment is not valid"
+
+    # Ensure hostname is from allowed domain
+    assert data.endswith('.' + ALLOWED_DOMAIN), "Hostname have to be in allowed domain"
 
     return data
 
