@@ -23,19 +23,25 @@ def _validate_ip(data):
     return data
 
 
-def _validate_hostname(data):
-    """Make sure this is suitable for hostname.
-
-    Taken from https://stackoverflow.com/questions/2532053/validate-a-hostname-string"""
-
-    assert len(data) <= 255, f"Too long hostname {data}: {len(data)} chars"
-
+def _sanitize_hostname(data):
+    """Just sanitize hostname into unified form"""
     # Strip exactly one dot from the right, if present
     if data[-1] == ".":
         data = data[:-1]
 
     # Make it lowercase
     data = data.lower()
+
+    return data
+
+
+def _validate_hostname(data):
+    """Make sure this is suitable for hostname.
+
+    Taken from https://stackoverflow.com/questions/2532053/validate-a-hostname-string"""
+    data = _sanitize_hostname(data)
+
+    assert len(data) <= 255, f"Too long hostname {data}: {len(data)} chars"
 
     # Ensures that each segment:
     #  - contains at least one character and a maximum of 63 characters
@@ -66,7 +72,7 @@ def _load_hosts():
 
                     ip, hostname = line.split()
 
-                    hostname = _validate_hostname(hostname)
+                    hostname = _sanitize_hostname(hostname)
                     ip = _validate_ip(ip)
 
                     assert hostname not in hosts, f"Hostname {hostname} duplicated"

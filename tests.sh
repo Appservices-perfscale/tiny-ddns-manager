@@ -38,4 +38,10 @@ curl -X GET http://127.0.0.1:5000/ | grep 'xyz\.example\.com.*1\.2\.3\.4'
 curl -X PUT http://127.0.0.1:5000/manage/unknown-host.another.net | grep 'result.*failed'
 curl -X GET http://127.0.0.1:5000/ | grep -v 'unknown-host\.another\.net'
 
+# If there it host in incorrect domain, still list it
+echo '5.6.7.8 host-from-elsewhere.elsewhere.org' >hosts_dir/host-from-elsewhere_elsewhere_org
+curl -X GET http://127.0.0.1:5000/ | grep 'xyz\.example\.com.*1\.2\.3\.4'
+curl -X GET http://127.0.0.1:5000/ | grep 'another-host\.example\.com.*127\.0\.0\.1'
+curl -X GET http://127.0.0.1:5000/ | grep 'host-from-elsewhere\.elsewhere\.org.*5\.6\.7\.8'
+
 echo "SUCCESS"
