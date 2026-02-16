@@ -44,4 +44,16 @@ curl -X GET http://127.0.0.1:5000/ | grep 'xyz\.example\.com.*1\.2\.3\.4'
 curl -X GET http://127.0.0.1:5000/ | grep 'another-host\.example\.com.*127\.0\.0\.1'
 curl -X GET http://127.0.0.1:5000/ | grep 'host-from-elsewhere\.elsewhere\.org.*5\.6\.7\.8'
 
+# Test DELETE: Remove a host and verify it's gone
+curl -X DELETE http://127.0.0.1:5000/manage/another-host.example.com | grep 'result.*success'
+curl -X GET http://127.0.0.1:5000/ | grep -v 'another-host\.example\.com'
+test ! -f hosts_dir/another-host_example_com
+
+# Test DELETE: Try to remove non-existent host
+curl -X DELETE http://127.0.0.1:5000/manage/does-not-exist.example.com | grep 'result.*failed'
+
+# Verify other hosts still exist after deletion
+curl -X GET http://127.0.0.1:5000/ | grep 'xyz\.example\.com.*1\.2\.3\.4'
+curl -X GET http://127.0.0.1:5000/ | grep 'host-from-elsewhere\.elsewhere\.org.*5\.6\.7\.8'
+
 echo "SUCCESS"
