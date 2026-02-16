@@ -95,6 +95,21 @@ def _manage_host(hostname, ip):
     return f"Host {hostname} with IP {ip} added"
 
 
+def _remove_host(hostname):
+    """Remove host from the directory"""
+
+    hostname = _validate_hostname(hostname)
+
+    hostname_safe = re.sub(r'[^a-z0-9_-]', '_', hostname.lower())
+    f_path = os.path.join(HOSTS_DIR, hostname_safe)
+
+    if os.path.exists(f_path):
+        os.remove(f_path)
+        return f"Host {hostname} removed"
+    else:
+        raise FileNotFoundError(f"Host {hostname} not found")
+
+
 @app.route('/', methods=['GET'])
 def index():
     """Return dict with managed hosts."""
@@ -119,6 +134,24 @@ def manage(hostname):
         ip = flask.request.remote_addr
 
         message = _manage_host(hostname, ip)
+
+        return {
+            "result": "success",
+            "message": message,
+        }
+    except Exception as e:
+        return {
+            "result": "failed",
+            "message": str(e),
+        }, 500
+
+
+@app.route('/manage/<string:hostname>', methods=['DELETE'])
+def remove(hostname):
+    """Remove host."""
+
+    try:
+        message = _remove_host(hostname)
 
         return {
             "result": "success",

@@ -21,6 +21,10 @@ is taken from the source of the request:
 
     curl -X PUT http://127.0.0.1:5000/manage/my-cool-host.usersys.example.com
 
+To remove a hostname:
+
+    curl -X DELETE http://127.0.0.1:5000/manage/my-cool-host.usersys.example.com
+
 For every managed host, you should be able to see one file in `hosts_dir/`
 directory. Intention is that dnsmasq would be loading hosts from that
 directory, so this way you can manage hosts returned by that DNS server.
